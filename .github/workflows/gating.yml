@@ -106,15 +106,8 @@ jobs:
         run: |
           sed -e "s@CONF_DIR@$(pwd)@g" tests/ipalab/ipa.yaml.in > tests/ipalab/ipa.yaml
 
-      - name: Add podman network for tests
-        shell: bash
-        run: |
-          subnet="$(grep subnet: tests/ipalab/ipa.yaml | cut -d: -f2-)"
-          network="$(grep network: tests/ipalab/ipa.yaml | cut -d: -f2-)"
-          podman network create --disable-dns --subnet $subnet $network
-
       - name: Configure FreeIPA environment and set up Modern UI for it
-        uses: rjeffman/FreeIPA-Cluster-Test@v1.3.0
+        uses: abbra/FreeIPA-Cluster-Test@enable-volumes
         with:
           cluster_configuration: tests/ipalab/ipa.yaml
           test_playbooks: tests/ipalab/playbooks/webui.yaml
