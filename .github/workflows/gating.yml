@@ -4,7 +4,7 @@ name: Gating tests
 on:
   pull_request:
   push:
-    branches: [main, devel]
+#    branches: [main, devel]
 
 env:
   GITHUB_CI: true
@@ -107,10 +107,11 @@ jobs:
           sed -e "s@CONF_DIR@$(pwd)@g" tests/ipalab/ipa.yaml.in > tests/ipalab/ipa.yaml
 
       - name: Configure FreeIPA environment and set up Modern UI for it
-        uses: abbra/FreeIPA-Cluster-Test@enable-volumes
+        uses: rjeffman/FreeIPA-Cluster-Test@v1.4.0
         with:
           cluster_configuration: tests/ipalab/ipa.yaml
           test_playbooks: tests/ipalab/playbooks/webui.yaml
+          ipalab_config_version: "git+https://github.com/rjeffman/ipalab-config.git@main"
 
       - name: Put IPA Server's IP to /etc/hosts
         run: sudo echo "$(podman exec -ti server.ipa.demo hostname -I) server.ipa.demo" | sudo tee -a /etc/hosts
